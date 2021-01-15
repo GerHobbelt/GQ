@@ -15,41 +15,12 @@ pkg_check_modules(GUMBO REQUIRED gumbo)
 include_directories(${GUMBO_INCLUDE_DIRS})
 link_directories(${GUMBO_LIBRARY_DIRS})
 
-add_library(GQ SHARED
+file(GLOB_RECURSE HEADERS "src/*.hpp")
+file(GLOB_RECURSE SOURCES "src/*.cpp")
 
-  src/AttributeSelector.cpp
-  src/AttributeSelector.hpp
-  src/BinarySelector.cpp
-  src/BinarySelector.hpp
-  src/Document.cpp
-  src/Document.hpp
-  src/Node.cpp
-  src/Node.hpp
-  src/NodeMutationCollection.cpp
-  src/NodeMutationCollection.hpp
-  src/Parser.cpp 
-  src/Parser.hpp 
-  src/Selection.cpp 
-  src/Selection.hpp 
-  src/Selector.cpp 
-  src/Selector.hpp 
-  src/Serializer.cpp 
-  src/Serializer.hpp 
-  src/SpecialTraits.cpp 
-  src/SpecialTraits.hpp 
-  src/StrRefHash.hpp 
-  src/TextSelector.cpp
-  src/TextSelector.hpp
-  src/TreeMap.cpp
-  src/TreeMap.hpp
-  src/UnarySelector.cpp
-  src/UnarySelector.hpp
-  src/Util.cpp
-  src/Util.hpp
-  )
+add_library(GQ SHARED "${HEADERS}" "${SOURCES}")
 
 target_link_libraries(GQ ${GUMBO_LIBRARIES})
-
 
 
   

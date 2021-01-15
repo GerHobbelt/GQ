@@ -34,31 +34,31 @@ namespace gq
 	{
 	}
 
-	const boost::string_ref SpecialTraits::GetTagKey()
+	const boost::string_view SpecialTraits::GetTagKey()
 	{
 		return TagKey.Get();
 	}
 
-	const boost::string_ref SpecialTraits::GetPseudoKey()
+	const boost::string_view SpecialTraits::GetPseudoKey()
 	{
 		return PseudoKey.Get();
 	}
 
-	const boost::string_ref SpecialTraits::GetAnyValue()
+	const boost::string_view SpecialTraits::GetAnyValue()
 	{
 		// For values, we're actually safe to return static non-random values, because they are
 		// sheltered by the uniqueness of the key.
-		return boost::string_ref(u8"*");
+		return boost::string_view(u8"*");
 	}
 
-	const boost::string_ref SpecialTraits::GetLastChildValue()
+	const boost::string_view SpecialTraits::GetLastChildValue()
 	{		
-		return boost::string_ref(u8"last-child");
+		return boost::string_view(u8"last-child");
 	}
 
-	const boost::string_ref SpecialTraits::GetLastChildOfTypeValue()
+	const boost::string_view SpecialTraits::GetLastChildOfTypeValue()
 	{
-		return boost::string_ref(u8"last-of-type");
+		return boost::string_view(u8"last-of-type");
 	}
 
 	SpecialTraits::RandomKey::RandomKey()
@@ -81,9 +81,9 @@ namespace gq
 		m_str[9] = Chars[static_cast<size_t>(dist(mt))];
 	}
 
-	const boost::string_ref SpecialTraits::RandomKey::Get() const
+	const boost::string_view SpecialTraits::RandomKey::Get() const
 	{
-		return boost::string_ref(m_str);
+		return boost::string_view(m_str);
 	}
 
 	const std::string SpecialTraits::RandomKey::Chars{ u8"1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" };

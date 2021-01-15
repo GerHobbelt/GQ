@@ -37,14 +37,14 @@
 
 namespace gq
 {
-	AttributeSelector::AttributeSelector(boost::string_ref key) :
+	AttributeSelector::AttributeSelector(boost::string_view key) :
 		m_operator(SelectorOperator::Exists),
 		m_attributeNameString(key.to_string()),
 		m_attributeNameRef(m_attributeNameString)
 	{
 		if (m_attributeNameRef.size() == 0)
 		{
-			throw std::runtime_error(u8"In AttributeSelector::AttributeSelector(SelectorOperator, boost::string_ref, const bool) - Supplied attribute identifier has zero length.");
+			throw std::runtime_error(u8"In AttributeSelector::AttributeSelector(SelectorOperator, boost::string_view, const bool) - Supplied attribute identifier has zero length.");
 		}
 
 		#ifndef NDEBUG
@@ -57,7 +57,7 @@ namespace gq
 		AddMatchTrait(m_attributeNameRef, SpecialTraits::GetAnyValue());		
 	}
 
-	AttributeSelector::AttributeSelector(SelectorOperator op, boost::string_ref key, boost::string_ref value) :
+	AttributeSelector::AttributeSelector(SelectorOperator op, boost::string_view key, boost::string_view value) :
 		m_operator(op),
 		m_attributeNameString(key.to_string()),
 		m_attributeNameRef(m_attributeNameString),
@@ -66,19 +66,19 @@ namespace gq
 	{
 		if (m_attributeNameRef.size() == 0)
 		{
-			throw std::runtime_error(u8"In AttributeSelector::AttributeSelector(SelectorOperator, boost::string_ref, const bool) - Supplied attribute identifier has zero length.");
+			throw std::runtime_error(u8"In AttributeSelector::AttributeSelector(SelectorOperator, boost::string_view, const bool) - Supplied attribute identifier has zero length.");
 		}
 
 		if (m_attributeValueRef.size() == 0)
 		{
-			throw std::runtime_error(u8"In AttributeSelector::AttributeSelector(SelectorOperator, boost::string_ref, const bool) - Supplied attribute value has zero length.");
+			throw std::runtime_error(u8"In AttributeSelector::AttributeSelector(SelectorOperator, boost::string_view, const bool) - Supplied attribute value has zero length.");
 		}
 
 		if (m_operator == SelectorOperator::ValueContainsElementInWhitespaceSeparatedList)
 		{
 			if (m_attributeNameRef.find_first_of(u8"\t\r\n ") != std::string::npos)
 			{
-				throw std::runtime_error(u8"In AttributeSelector::AttributeSelector(SelectorOperator, boost::string_ref, const bool) - Constructed ValueContainsElementInWhitespaceSeparatedList attribute selector, but spaces exist in the search value. This is not allowed.");
+				throw std::runtime_error(u8"In AttributeSelector::AttributeSelector(SelectorOperator, boost::string_view, const bool) - Constructed ValueContainsElementInWhitespaceSeparatedList attribute selector, but spaces exist in the search value. This is not allowed.");
 			}
 		}
 
@@ -140,7 +140,7 @@ namespace gq
 				auto searchResult = attributeValue.find(m_attributeValueRef);
 
 				// Simply return whether or not we got any matches.
-				if (searchResult != boost::string_ref::npos)
+				if (searchResult != boost::string_view::npos)
 				{
 					return MatchResult(node);
 				}
@@ -240,7 +240,7 @@ namespace gq
 				}
 
 				// Test equality of same-length substring taken from the end.
-				boost::string_ref sub = attributeValue.substr((attributeValue.size() - subSize));
+				boost::string_view sub = attributeValue.substr((attributeValue.size() - subSize));
 
 				subSize = sub.size();
 
@@ -321,14 +321,14 @@ namespace gq
 				// then we can just immediately return false.
 				auto anySpacePosition = attributeValue.find(' ');
 
-				if (anySpacePosition == boost::string_ref::npos)
+				if (anySpacePosition == boost::string_view::npos)
 				{
 					return nullptr;
 				}				
 				
 				auto firstSpace = attributeValue.find(' ');
 
-				while (firstSpace != boost::string_ref::npos && attributeValue.size() > 0)
+				while (firstSpace != boost::string_view::npos && attributeValue.size() > 0)
 				{					
 					if (firstSpace > 0 && firstSpace == m_attributeValueRef.size())
 					{
@@ -420,14 +420,14 @@ namespace gq
 				// away.
 				auto anyHyphen = attributeValue.find('-');
 
-				if (anyHyphen == boost::string_ref::npos)
+				if (anyHyphen == boost::string_view::npos)
 				{
 					return nullptr;
 				}
 
 				// A hyphen was found, so all we have to do is make a case-insensitive match against
 				// a substring of equal length to our member value.
-				boost::string_ref sub = attributeValue.substr(0, m_attributeValueRef.size() + 1);
+				boost::string_view sub = attributeValue.substr(0, m_attributeValueRef.size() + 1);
 
 				if (sub[sub.length() - 1] != '-')
 				{

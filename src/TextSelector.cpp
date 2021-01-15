@@ -35,12 +35,12 @@
 namespace gq
 {
 
-	TextSelector::TextSelector(const SelectorOperator op, const boost::string_ref value) :
+	TextSelector::TextSelector(const SelectorOperator op, const boost::string_view value) :
 		m_operator(op), m_textToMatch(value.to_string()), m_textToMatchStrRef(m_textToMatch)
 	{
 		if (m_textToMatch.size() == 0)
 		{
-			throw std::runtime_error(u8"In AttributeSelector::AttributeSelector(SelectorOperator, const boost::string_ref) - Supplied text to match has zero length.");
+			throw std::runtime_error(u8"In AttributeSelector::AttributeSelector(SelectorOperator, const boost::string_view) - Supplied text to match has zero length.");
 		}
 
 		if (m_operator == SelectorOperator::Matches || m_operator == SelectorOperator::MatchesOwn)
@@ -49,7 +49,7 @@ namespace gq
 
 			if (m_expression == nullptr)
 			{
-				throw std::runtime_error(u8"In AttributeSelector::AttributeSelector(SelectorOperator, const boost::string_ref) - Failed to allocate new std::regex for regex based TextSelector.");
+				throw std::runtime_error(u8"In AttributeSelector::AttributeSelector(SelectorOperator, const boost::string_view) - Failed to allocate new std::regex for regex based TextSelector.");
 			}
 		}
 
@@ -74,7 +74,7 @@ namespace gq
 
 			if (m_expression == nullptr)
 			{
-				throw std::runtime_error(u8"In AttributeSelector::AttributeSelector(SelectorOperator, const boost::string_ref) - Failed to allocate new std::regex for regex based TextSelector.");
+				throw std::runtime_error(u8"In AttributeSelector::AttributeSelector(SelectorOperator, const boost::string_view) - Failed to allocate new std::regex for regex based TextSelector.");
 			}
 		}
 
@@ -99,9 +99,9 @@ namespace gq
 				// In jQuery, contains is case sensitive. As such, we use find, rather than
 				// ifind_first.
 				auto text = Util::NodeText(node);
-				boost::string_ref textStrRef(text);
+				boost::string_view textStrRef(text);
 
-				if (textStrRef.find(m_textToMatchStrRef) != boost::string_ref::npos)
+				if (textStrRef.find(m_textToMatchStrRef) != boost::string_view::npos)
 				{
 					return MatchResult(node);
 				}
@@ -115,9 +115,9 @@ namespace gq
 				// In jQuery, contains is case sensitive. As such, we use find, rather than
 				// ifind_first.
 				auto text = Util::NodeOwnText(node);
-				boost::string_ref textStrRef(text);
+				boost::string_view textStrRef(text);
 
-				if (textStrRef.find(m_textToMatchStrRef) != boost::string_ref::npos)
+				if (textStrRef.find(m_textToMatchStrRef) != boost::string_view::npos)
 				{
 					return MatchResult(node);
 				}

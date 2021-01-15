@@ -34,7 +34,7 @@
 #include <vector>
 #include <memory>
 #include <algorithm>
-#include <boost/utility/string_ref.hpp>
+#include <boost/utility/string_view.hpp>
 
 namespace gq
 {	
@@ -126,7 +126,7 @@ namespace gq
 		/// <param name="str">
 		/// The string to trim enclosing quotation characters from. 
 		/// </param>
-		static boost::string_ref TrimEnclosingQuotes(boost::string_ref str);
+		static boost::string_view TrimEnclosingQuotes(boost::string_view str);
 
 		/// <summary>
 		/// Removes leading and trailing whitespace from the supplied string_ref, returns the
@@ -138,7 +138,7 @@ namespace gq
 		/// <returns>
 		/// The supplied string with any leading or trailing whitespace removed.
 		/// </returns>
-		static boost::string_ref Trim(boost::string_ref str);
+		static boost::string_view Trim(boost::string_view str);
 
 		/// <summary>
 		/// Gets the tag name for the supplied node. This method also handles unknown tags. That is,

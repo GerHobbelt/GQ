@@ -114,7 +114,7 @@ namespace gq
 		RemoveDuplicates(primaryCollection);		
 	}
 
-	boost::string_ref Util::TrimEnclosingQuotes(boost::string_ref str)
+	boost::string_view Util::TrimEnclosingQuotes(boost::string_view str)
 	{
 		if (str.length() >= 2)
 		{
@@ -129,7 +129,7 @@ namespace gq
 						if (end == 0)
 						{
 							// Just so that it's not nullptr internall
-							return boost::string_ref(str.data(), 0);
+							return boost::string_view(str.data(), 0);
 						}
 
 						str = str.substr(1, end);
@@ -145,7 +145,7 @@ namespace gq
 		return str;
 	}
 
-	boost::string_ref Util::Trim(boost::string_ref str)
+	boost::string_view Util::Trim(boost::string_view str)
 	{
 		#ifdef _MSC_VER
 		std::locale loc("");

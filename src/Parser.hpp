@@ -105,7 +105,7 @@ namespace gq
 		/// For quickly validating a parsed pseduo selector and in return getting an enum we can
 		/// switch on rather than having a mess of if/elseif/else.
 		/// </summary>
-		static const std::unordered_map<boost::string_ref, PseudoOp, StringRefHash> PseudoOps;
+		static const std::unordered_map<boost::string_view, PseudoOp, StringRefHash> PseudoOps;
 
 		/// <summary>
 		/// For supplying to isalpha, etc.
@@ -131,7 +131,7 @@ namespace gq
 		/// <returns>
 		/// The compiled selector. 
 		/// </returns>
-		SharedSelector ParseSelectorGroup(boost::string_ref& selectorStr) const;
+		SharedSelector ParseSelectorGroup(boost::string_view& selectorStr) const;
 
 		/// <summary>
 		/// Attempts top build one or more selector from the supplied string. Will handle all matter
@@ -153,7 +153,7 @@ namespace gq
 		/// <returns>
 		/// The compiled selector. 
 		/// </returns>
-		SharedSelector ParseSelector(boost::string_ref& selectorStr) const;
+		SharedSelector ParseSelector(boost::string_view& selectorStr) const;
 
 		/// <summary>
 		/// Attempts to parse a single selector from the supplied string. This object exists on
@@ -174,7 +174,7 @@ namespace gq
 		/// <returns>
 		/// The compiled selector. 
 		/// </returns>
-		SharedSelector ParseSimpleSelectorSequence(boost::string_ref& selectorStr) const;
+		SharedSelector ParseSimpleSelectorSequence(boost::string_view& selectorStr) const;
 
 		/// <summary>
 		/// Parses a single pseudo class selector from the supplied string. Returns a single,
@@ -193,7 +193,7 @@ namespace gq
 		/// <returns>
 		/// The compiled selector. 
 		/// </returns>
-		SharedSelector ParsePseudoclassSelector(boost::string_ref& selectorStr) const;
+		SharedSelector ParsePseudoclassSelector(boost::string_view& selectorStr) const;
 
 		/// <summary>
 		/// Parses a single attribute selector from the supplied string. Returns a single,
@@ -212,7 +212,7 @@ namespace gq
 		/// <returns>
 		/// The compiled selector. 
 		/// </returns>
-		SharedSelector ParseAttributeSelector(boost::string_ref& selectorStr) const;
+		SharedSelector ParseAttributeSelector(boost::string_view& selectorStr) const;
 
 		/// <summary>
 		/// Parses a single class selector from the supplied string. Returns a single,
@@ -231,7 +231,7 @@ namespace gq
 		/// <returns>
 		/// The compiled selector. 
 		/// </returns>
-		SharedSelector ParseClassSelector(boost::string_ref& selectorStr) const;
+		SharedSelector ParseClassSelector(boost::string_view& selectorStr) const;
 
 		/// <summary>
 		/// Parses a ID selector from the supplied string. Returns a single, non-chained selector
@@ -250,7 +250,7 @@ namespace gq
 		/// <returns>
 		/// The compiled selector. 
 		/// </returns>
-		SharedSelector ParseIDSelector(boost::string_ref& selectorStr) const;
+		SharedSelector ParseIDSelector(boost::string_view& selectorStr) const;
 
 		/// <summary>
 		/// Parses a Selector that matches against a specific HTML element by its tag type from
@@ -270,7 +270,7 @@ namespace gq
 		/// <returns>
 		/// The compiled selector. 
 		/// </returns>
-		SharedSelector ParseTypeSelector(boost::string_ref& selectorStr) const;
+		SharedSelector ParseTypeSelector(boost::string_view& selectorStr) const;
 
 		/// <summary>
 		/// Attempts to parse the left hand and right hand side of the supplied nth parameter
@@ -292,7 +292,7 @@ namespace gq
 		/// <param name="rhs">
 		/// The right hand side reference to set on successful parsing. 
 		/// </param>
-		void ParseNth(boost::string_ref& selectorStr, int& lhs, int& rhs) const;
+		void ParseNth(boost::string_view& selectorStr, int& lhs, int& rhs) const;
 
 		/// <summary>
 		/// Attempts to extract a number from the front of the supplied selector string, converting
@@ -311,7 +311,7 @@ namespace gq
 		/// <returns>
 		/// The extracted integer value. 
 		/// </returns>
-		const int ParseInteger(boost::string_ref& selectorStr) const;
+		const int ParseInteger(boost::string_view& selectorStr) const;
 
 		/// <summary>
 		/// Trims any whitspace that may be between the start of the supplied selector string and a
@@ -325,7 +325,7 @@ namespace gq
 		/// The string beginning with either whitespace and a closing parenthesis, or just a closing
 		/// parenthesis.
 		/// </param>
-		void ConsumeClosingParenthesis(boost::string_ref& selectorStr) const;
+		void ConsumeClosingParenthesis(boost::string_view& selectorStr) const;
 
 		/// <summary>
 		/// Consumes the opening parenthesis at the beginning of the supplied string, and any
@@ -345,7 +345,7 @@ namespace gq
 		/// The string beginning with an opening parenthesis, optionally followed by whitespace
 		/// characters to be consumed as well.
 		/// </param>
-		void ConsumeOpeningParenthesis(boost::string_ref& selectorStr) const;
+		void ConsumeOpeningParenthesis(boost::string_view& selectorStr) const;
 
 		/// <summary>
 		/// Removes any whitespace characters found in the start of the supplied string.
@@ -356,7 +356,7 @@ namespace gq
 		/// <returns>
 		/// True if leading whitespace characters were removed, false otherwise.
 		/// </returns>
-		const bool TrimLeadingWhitespace(boost::string_ref& str) const;
+		const bool TrimLeadingWhitespace(boost::string_view& str) const;
 
 		/// <summary>
 		/// Extracts all contents contained between an unescaped opening quote character, and the
@@ -384,7 +384,7 @@ namespace gq
 		/// The substring containing the contents between the opening quote character and first
 		/// matched closing quote character.
 		/// </returns>
-		boost::string_ref ParseString(boost::string_ref& selectorStr) const;
+		boost::string_view ParseString(boost::string_view& selectorStr) const;
 
 		/// <summary>
 		/// Delegates directly to ParseIdentifier. This function will most likely be entirely
@@ -416,7 +416,7 @@ namespace gq
 		/// <returns>
 		/// The extracted name. 
 		/// </returns>
-		boost::string_ref ParseName(boost::string_ref& selectorStr) const;
+		boost::string_view ParseName(boost::string_view& selectorStr) const;
 
 		/// <summary>
 		/// Extracts a valid identifier from the front of the supplied string, removing it from the
@@ -440,7 +440,7 @@ namespace gq
 		/// <returns>
 		/// The extracted identifier. 
 		/// </returns>
-		boost::string_ref ParseIdentifier(boost::string_ref& selectorStr) const;
+		boost::string_view ParseIdentifier(boost::string_view& selectorStr) const;
 
 		/// <summary>
 		/// Checks whether the supplied character is a valid named entity character. Internally uses

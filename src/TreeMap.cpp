@@ -38,12 +38,12 @@ namespace gq
 
 	}	
 
-	void TreeMap::AddNodeToMap(boost::string_ref scope, const Node* node, const AttributeMap& nodeAttributeMap)
+	void TreeMap::AddNodeToMap(boost::string_view scope, const Node* node, const AttributeMap& nodeAttributeMap)
 	{
 		#ifndef NDEBUG
-			assert(scope.size() > 0 && u8"In QTreeMap::AddNodeToMap(boost::string_ref, const Node*, const AttributeMap&) - The supplied scope is empty. This error is impossible unless a user is directly and incorrectly calling this method, or if this class and its required mechanisms are fundamentally broken.");
+			assert(scope.size() > 0 && u8"In QTreeMap::AddNodeToMap(boost::string_view, const Node*, const AttributeMap&) - The supplied scope is empty. This error is impossible unless a user is directly and incorrectly calling this method, or if this class and its required mechanisms are fundamentally broken.");
 		#else
-			if (scope.size() == 0) { throw std::runtime_error(u8"In QTreeMap::AddNodeToMap(boost::string_ref, const Node*, const AttributeMap&) - The supplied scope is empty. This error is impossible unless a user is directly and incorrectly calling this method, or if this class and its required mechanisms are fundamentally broken."); }
+			if (scope.size() == 0) { throw std::runtime_error(u8"In QTreeMap::AddNodeToMap(boost::string_view, const Node*, const AttributeMap&) - The supplied scope is empty. This error is impossible unless a user is directly and incorrectly calling this method, or if this class and its required mechanisms are fundamentally broken."); }
 		#endif
 		
 		#ifndef NDEBUG
@@ -161,30 +161,30 @@ namespace gq
 		}		
 	}
 
-	const std::vector< const Node* >* TreeMap::Get(boost::string_ref scope, boost::string_ref attribute) const
+	const std::vector< const Node* >* TreeMap::Get(boost::string_view scope, boost::string_view attribute) const
 	{
 		return Get(scope, attribute, SpecialTraits::GetAnyValue());
 	}
 
-	const std::vector< const Node* >* TreeMap::Get(boost::string_ref scope, boost::string_ref attribute, boost::string_ref attributeValue) const
+	const std::vector< const Node* >* TreeMap::Get(boost::string_view scope, boost::string_view attribute, boost::string_view attributeValue) const
 	{
 		// First, jump the the correct scope to begin matching from.
 		const auto& atScope = m_scopedAttributes.find(scope);
 
 		#ifndef NDEBUG
-			assert(atScope != m_scopedAttributes.end() && u8"In TreeMap::Get(boost::string_ref, boost::string_ref, boost::string_ref) - The supplied scope does not exist. This error is impossible unless a user is directly and incorrectly calling this method, or if this class and its required mechanisms are fundamentally broken.");
+			assert(atScope != m_scopedAttributes.end() && u8"In TreeMap::Get(boost::string_view, boost::string_view, boost::string_view) - The supplied scope does not exist. This error is impossible unless a user is directly and incorrectly calling this method, or if this class and its required mechanisms are fundamentally broken.");
 		#else
 			if (atScope == m_scopedAttributes.end())
 			{
 				// This should not be possible, provided users are messing about and the
 				// implementation isn't fundamentally broken.
-				throw std::runtime_error(u8"In TreeMap::Get(boost::string_ref, boost::string_ref, boost::string_ref) - The supplied scope does not exist. This error is impossible unless a user is directly and incorrectly calling this method, or if this class and its required mechanisms are fundamentally broken.");
+				throw std::runtime_error(u8"In TreeMap::Get(boost::string_view, boost::string_view, boost::string_view) - The supplied scope does not exist. This error is impossible unless a user is directly and incorrectly calling this method, or if this class and its required mechanisms are fundamentally broken.");
 			}
 		#endif		
 
 		#ifndef NDEBUG
 			#ifdef GQ_VERBOSE_DEBUG_NFO
-				std::cout << u8"In TreeMap::Get(boost::string_ref, boost::string_ref, boost::string_ref) - Looking up at scope " << scope << u8" with key " << attribute << u8" and value " << attributeValue << u8"." << std::endl;
+				std::cout << u8"In TreeMap::Get(boost::string_view, boost::string_view, boost::string_view) - Looking up at scope " << scope << u8" with key " << attribute << u8" and value " << attributeValue << u8"." << std::endl;
 			#endif
 		#endif
 

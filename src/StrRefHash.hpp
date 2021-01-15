@@ -23,7 +23,7 @@
 #pragma once
 
 #include <boost/functional/hash.hpp>
-#include <boost/utility/string_ref.hpp>
+#include <boost/utility/string_view.hpp>
 #include <boost/algorithm/string.hpp>
 
 namespace gq
@@ -34,7 +34,7 @@ namespace gq
 	/// </summary>
 	struct StringRefHash
 	{
-		size_t operator()(const boost::string_ref& strRef) const
+		size_t operator()(const boost::string_view& strRef) const
 		{
 			return boost::hash_range(strRef.begin(), strRef.end());
 		}
@@ -42,7 +42,7 @@ namespace gq
 
 	struct StringRefEquality
 	{
-		bool operator()(const boost::string_ref& strRef1, const boost::string_ref& strRef2) const
+		bool operator()(const boost::string_view& strRef1, const boost::string_view& strRef2) const
 		{
 			auto oneSize = strRef1.size();
 			auto twoSize = strRef2.size();

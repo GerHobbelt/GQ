@@ -31,7 +31,7 @@
 
 #include <memory>
 #include <functional>
-#include <boost/utility/string_ref.hpp>
+#include <boost/utility/string_view.hpp>
 #include <boost/algorithm/string.hpp>
 #include "Selector.hpp"
 #include "StrRefHash.hpp"
@@ -133,7 +133,7 @@ namespace gq
 		const bool HasAttribute(const std::string& attributeName) const;
 
 		/// <summary>
-		/// Overload that takes the named attribute by boost::string_ref const reference and returns
+		/// Overload that takes the named attribute by boost::string_view const reference and returns
 		/// whether or not the named attribute exists on this element. Does not support prefix
 		/// searching.
 		/// </summary>
@@ -143,7 +143,7 @@ namespace gq
 		/// <returns>
 		/// True if the attribute exists, false otherwise. 
 		/// </returns>
-		const bool HasAttribute(const boost::string_ref attributeName) const;
+		const bool HasAttribute(const boost::string_view attributeName) const;
 
 		/// <summary>
 		/// Check if the node is actually completely empty, or if it contains non-html element
@@ -159,18 +159,18 @@ namespace gq
 		const bool IsEmpty() const;
 
 		/// <summary>
-		/// Overload that takes the named attribute by boost::string_ref const reference and returns
-		/// the value in a boost::string_ref object. The purpose of this overload is to allow
+		/// Overload that takes the named attribute by boost::string_view const reference and returns
+		/// the value in a boost::string_view object. The purpose of this overload is to allow
 		/// attribute lookup and comparison without making any copies of string data.
 		/// </summary>
 		/// <param name="attributeName">
 		/// The named attribute to return the value of. 
 		/// </param>
 		/// <returns>
-		/// A boost::string_ref which may be empty if the supplied named attribute was not found or
+		/// A boost::string_view which may be empty if the supplied named attribute was not found or
 		/// contained no value.
 		/// </returns>
-		boost::string_ref GetAttributeValue(const boost::string_ref attributeName) const;
+		boost::string_view GetAttributeValue(const boost::string_view attributeName) const;
 
 		/// <summary>
 		/// Gets the text of this node and all of its text descendants combined. 
@@ -234,7 +234,7 @@ namespace gq
 		/// <returns>
 		/// The tag of the node as a string.
 		/// </returns>
-		boost::string_ref GetTagName() const;
+		boost::string_view GetTagName() const;
 
 		/// <summary>
 		/// Gets the tag of the node.
@@ -321,7 +321,7 @@ namespace gq
 		/// <returns>
 		/// The unique ID of the node.
 		/// </returns>
-		const boost::string_ref GetUniqueId() const;
+		const boost::string_view GetUniqueId() const;
 
 		/// <summary>
 		/// Gets the inner HTML for the node and its descendants in string format.
@@ -425,20 +425,20 @@ namespace gq
 
 			}
 
-			std::vector<std::pair<boost::string_ref, boost::string_ref>>::const_iterator begin() const
+			std::vector<std::pair<boost::string_view, boost::string_view>>::const_iterator begin() const
 			{								
 				return m_collection.begin();
 			}
 
-			std::vector<std::pair<boost::string_ref, boost::string_ref>>::const_iterator end() const
+			std::vector<std::pair<boost::string_view, boost::string_view>>::const_iterator end() const
 			{
 				return m_collection.end();
 			}
 
-			void insert(std::pair<boost::string_ref, boost::string_ref> value)
+			void insert(std::pair<boost::string_view, boost::string_view> value)
 			{
 				if (std::find_if(m_collection.begin(), m_collection.end(),
-					[value](const std::pair<boost::string_ref, boost::string_ref>& str)-> bool
+					[value](const std::pair<boost::string_view, boost::string_view>& str)-> bool
 					{
 						auto oneSize = str.first.size();
 						auto twoSize = value.first.size();
@@ -471,10 +471,10 @@ namespace gq
 				}
 			}
 
-			std::vector<std::pair<boost::string_ref, boost::string_ref>>::const_iterator find(const boost::string_ref key) const
+			std::vector<std::pair<boost::string_view, boost::string_view>>::const_iterator find(const boost::string_view key) const
 			{
 				return std::find_if(m_collection.begin(), m_collection.end(),
-					[key](const std::pair<boost::string_ref, boost::string_ref>& str)-> bool
+					[key](const std::pair<boost::string_view, boost::string_view>& str)-> bool
 				{
 					auto oneSize = str.first.size();
 					auto twoSize = key.size();
@@ -506,7 +506,7 @@ namespace gq
 
 		private:
 
-			std::vector<std::pair<boost::string_ref, boost::string_ref>> m_collection;
+			std::vector<std::pair<boost::string_view, boost::string_view>> m_collection;
 		};
 
 		/// <summary>

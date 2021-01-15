@@ -34,7 +34,7 @@
 #include <gumbo.h>
 #include <vector>
 #include <cassert>
-#include <boost/utility/string_ref.hpp>
+#include <boost/utility/string_view.hpp>
 
 // For printing debug information about compiled selectors to the console.
 #ifndef NDEBUG
@@ -217,7 +217,7 @@ namespace gq
 		/// The normalized tag name that this selector should match against. Empty no tag is
 		/// specified.
 		/// </returns>
-		const boost::string_ref GetNormalizedTagTypeToMatch() const;
+		const boost::string_view GetNormalizedTagTypeToMatch() const;
 		
 		/// <summary>
 		/// Get a collection of attributes that this selector requires for the sake of matching.
@@ -227,7 +227,7 @@ namespace gq
 		/// <returns>
 		/// A collection of attributes that can be used to narrow down potential match candidates. 
 		/// </returns>
-		const std::vector< std::pair<boost::string_ref, boost::string_ref> >& GetMatchTraits() const;
+		const std::vector< std::pair<boost::string_view, boost::string_view> >& GetMatchTraits() const;
 
 		/// <summary>
 		/// Check if this selector is a match against the supplied node. 
@@ -269,7 +269,7 @@ namespace gq
 		/// </summary>
 		/// <returns>
 		/// </returns>
-		boost::string_ref GetOriginalSelectorString() const;
+		boost::string_view GetOriginalSelectorString() const;
 
 	protected:
 
@@ -296,7 +296,7 @@ namespace gq
 		/// an asterik value, any node containing the supplied attribute will be selected as a
 		/// potential match candidate, so use wisely.
 		/// </param>
-		void AddMatchTrait(boost::string_ref key, boost::string_ref value);
+		void AddMatchTrait(boost::string_view key, boost::string_view value);
 
 	private:
 		
@@ -310,7 +310,7 @@ namespace gq
 		/// The value of gumbo_normalized_tagname(m_tagTypeToMatch), if m_tagTypeToMatch !=
 		/// GUMBO_TAG_UNKNOWN.
 		/// </summary>
-		boost::string_ref m_normalizedTagTypeToMatch;
+		boost::string_view m_normalizedTagTypeToMatch;
 
 		/// <summary>
 		/// Defines how the matching in this selector will work. Based on the option, the text to be
@@ -373,7 +373,7 @@ namespace gq
 		/// goal for this project that manual searching should be eliminated as a requirement
 		/// altogether.
 		/// </summary>
-		std::vector< std::pair<boost::string_ref, boost::string_ref> > m_matchTraits;
+		std::vector< std::pair<boost::string_view, boost::string_view> > m_matchTraits;
 
 		/// <summary>
 		/// Init member defaults across multiple constructors.

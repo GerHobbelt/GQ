@@ -1,9 +1,12 @@
 # Build script for GQ written by Henri Hyyryläinen
 # This is meant to be used within a cmake project
 cmake_minimum_required(VERSION 3.0)
+project("GQ")
+
+set(PROJECT_VERSION 0.0.1-dev)
 
 if(UNIX)
-  
+
   # C++14
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -Wall -Wl,--no-undefined -Wl,--no-allow-shlib-undefined")
   

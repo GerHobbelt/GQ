@@ -107,12 +107,12 @@ namespace gq
 		/// <summary>
 		/// List of tags that do not require a named closing tag.
 		/// </summary>
-		static const std::unordered_set<boost::string_view, StringRefHash> EmptyTags;
+		static const std::unordered_set<std::string_view, StringRefHash> EmptyTags;
 
 		/// <summary>
 		/// Tags that should have newlines appended to.
 		/// </summary>
-		static const std::unordered_set<boost::string_view, StringRefHash> SpecialHandling;
+		static const std::unordered_set<std::string_view, StringRefHash> SpecialHandling;
 
 		/// <summary>
 		/// Gets a string representation of the tag name for the supplied node. 

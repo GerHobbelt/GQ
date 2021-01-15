@@ -30,7 +30,7 @@
 #pragma once
 
 #include "Selector.hpp"
-#include <boost/utility/string_view.hpp>
+#include <string_view>
 #include <regex>
 
 namespace gq
@@ -101,7 +101,7 @@ namespace gq
 		/// <param name="value">
 		/// The text to be matched. Must have a length greater than zero.
 		/// </param>
-		TextSelector(const SelectorOperator op, const boost::string_view value);
+		TextSelector(const SelectorOperator op, const std::string_view value);
 
 		/// <summary>
 		/// Constructs a new TextSelector with the supplied operator and text to match. The
@@ -149,9 +149,9 @@ namespace gq
 		std::string m_textToMatch;
 
 		/// <summary>
-		/// A boost::string_view wrapper for the text to be matched.
+		/// A std::string_view wrapper for the text to be matched.
 		/// </summary>
-		boost::string_view m_textToMatchStrRef;
+		std::string_view m_textToMatchStrRef;
 
 		/// <summary>
 		/// If this text selector is regex based selector, we'll need a regex object to work with.

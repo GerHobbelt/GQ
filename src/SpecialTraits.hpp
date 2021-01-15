@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include <boost/utility/string_view.hpp>
+#include <string>
 
 namespace gq
 {
@@ -76,7 +76,7 @@ namespace gq
 		/// <returns>
 		/// The unique key used for indexing based on normalized tag name. 
 		/// </returns>
-		static const boost::string_view GetTagKey();
+		static const std::string_view GetTagKey();
 
 		/// <summary>
 		/// Gets the unique key used for indexing based on various pseudo class attributes. For
@@ -87,7 +87,7 @@ namespace gq
 		/// <returns>
 		/// The unique key used for indexing based on various pseudo class attributes.
 		/// </returns>
-		static const boost::string_view GetPseudoKey();
+		static const std::string_view GetPseudoKey();
 
 		/// <summary>
 		/// Gets the value used for indexing a node as having a specified attribute key, but without
@@ -97,7 +97,7 @@ namespace gq
 		/// <returns>
 		/// The value used for indexing a node as having a specified attribute key.
 		/// </returns>
-		static const boost::string_view GetAnyValue();
+		static const std::string_view GetAnyValue();
 
 		/// <summary>
 		/// Gets the value used for indexing a node as being the last child within its parent. As
@@ -110,7 +110,7 @@ namespace gq
 		/// <returns>
 		/// The value used for indexing a node as being the last child within its parent. 
 		/// </returns>
-		static const boost::string_view GetLastChildValue();
+		static const std::string_view GetLastChildValue();
 
 		/// <summary>
 		/// Gets the value used for indexing a node as being the last child of a certain type within
@@ -124,7 +124,7 @@ namespace gq
 		/// The value used for indexing a node as being the last child of a certain type within its
 		/// parent.
 		/// </returns>
-		static const boost::string_view GetLastChildOfTypeValue();
+		static const std::string_view GetLastChildOfTypeValue();
 
 	private:
 
@@ -138,7 +138,7 @@ namespace gq
 
 			RandomKey();
 
-			const boost::string_view Get() const;
+			const std::string_view Get() const;
 
 		private:
 

@@ -107,11 +107,11 @@ namespace gq
 
 	const bool Node::HasAttribute(const std::string& attributeName) const
 	{
-		boost::string_view ref(attributeName);
+		std::string_view ref(attributeName);
 		return HasAttribute(ref);
 	}
 
-	const bool Node::HasAttribute(const boost::string_view attributeName) const
+	const bool Node::HasAttribute(const std::string_view attributeName) const
 	{
 		auto search = m_attributes.find(attributeName);
 		return search != m_attributes.end();
@@ -137,7 +137,7 @@ namespace gq
 		return true;
 	}
 
-	boost::string_view Node::GetAttributeValue(const boost::string_view attributeName) const
+	std::string_view Node::GetAttributeValue(const std::string_view attributeName) const
 	{			
 		auto res = m_attributes.find(attributeName);
 		if (res != m_attributes.end())
@@ -145,7 +145,7 @@ namespace gq
 			return res->second;
 		}
 
-		return boost::string_view();
+		return std::string_view();
 	}
 
 	std::string Node::GetText() const
@@ -262,9 +262,9 @@ namespace gq
 		}
 	}
 
-	boost::string_view Node::GetTagName() const
+	std::string_view Node::GetTagName() const
 	{	
-		return boost::string_view(m_nodeTagNameString);
+		return std::string_view(m_nodeTagNameString);
 	}
 
 	const GumboTag Node::GetTag() const
@@ -466,9 +466,9 @@ namespace gq
 		}
 	}
 
-	const boost::string_view Node::GetUniqueId() const
+	const std::string_view Node::GetUniqueId() const
 	{
-		return boost::string_view(m_nodeUniqueId);
+		return std::string_view(m_nodeUniqueId);
 	}
 
 	std::string Node::GetInnerHtml() const
@@ -538,17 +538,17 @@ namespace gq
 			{
 				const GumboAttribute* attribute = static_cast<GumboAttribute*>(attribs->data[i]);
 
-				boost::string_view attribName;
-				boost::string_view attribValue;
+				std::string_view attribName;
+				std::string_view attribValue;
 
 				if (attribute->original_name.length > 0)
 				{
-					attribName = boost::string_view(attribute->original_name.data, attribute->original_name.length);
+					attribName = std::string_view(attribute->original_name.data, attribute->original_name.length);
 				}
 
 				if (attribute->original_value.length > 0)
 				{
-					attribValue = boost::string_view(attribute->original_value.data, attribute->original_value.length);
+					attribValue = std::string_view(attribute->original_value.data, attribute->original_value.length);
 				}
 				
 				attribValue = Util::TrimEnclosingQuotes(attribValue);
@@ -565,10 +565,10 @@ namespace gq
 				// Split the attribute values up and store them individually
 				auto anySplittablePos = attribValue.find(' ');
 
-				if (anySplittablePos != boost::string_view::npos)
+				if (anySplittablePos != std::string_view::npos)
 				{
 					bool splitOnce = false;
-					while (anySplittablePos != boost::string_view::npos && attribValue.size() > 0)
+					while (anySplittablePos != std::string_view::npos && attribValue.size() > 0)
 					{
 						if (anySplittablePos > 0)
 						{

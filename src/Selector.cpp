@@ -157,12 +157,12 @@ namespace gq
 		return m_tagTypeToMatch;
 	}
 
-	const boost::string_view Selector::GetNormalizedTagTypeToMatch() const
+	const std::string_view Selector::GetNormalizedTagTypeToMatch() const
 	{
 		return m_normalizedTagTypeToMatch;
 	}
 
-	const std::vector< std::pair<boost::string_view, boost::string_view> >& Selector::GetMatchTraits() const
+	const std::vector< std::pair<std::string_view, std::string_view> >& Selector::GetMatchTraits() const
 	{
 		return m_matchTraits;
 	}
@@ -384,9 +384,9 @@ namespace gq
 		), nodes.end());
 	}
 
-	boost::string_view Selector::GetOriginalSelectorString() const
+	std::string_view Selector::GetOriginalSelectorString() const
 	{
-		return boost::string_view(m_originalSelectorString);
+		return std::string_view(m_originalSelectorString);
 	}
 
 	void Selector::SetTagTypeToMatch(const GumboTag tag)
@@ -397,14 +397,14 @@ namespace gq
 		{
 			const char* normalName = gumbo_normalized_tagname(m_tagTypeToMatch);
 			
-			m_normalizedTagTypeToMatch = boost::string_view(normalName);
+			m_normalizedTagTypeToMatch = std::string_view(normalName);
 
 			// Add the tag type as a match trait
 			AddMatchTrait(SpecialTraits::GetTagKey(), m_normalizedTagTypeToMatch);
 		}
 	}
 
-	void Selector::AddMatchTrait(boost::string_view key, boost::string_view value)
+	void Selector::AddMatchTrait(std::string_view key, std::string_view value)
 	{
 		auto pair = std::make_pair(key, value);
 		if (std::find(m_matchTraits.begin(), m_matchTraits.end(), pair) == m_matchTraits.end())

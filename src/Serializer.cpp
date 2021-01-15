@@ -25,7 +25,7 @@
 namespace gq
 {
 
-	const std::unordered_set<boost::string_view, StringRefHash> Serializer::EmptyTags =
+	const std::unordered_set<std::string_view, StringRefHash> Serializer::EmptyTags =
 	{
 		{ u8"area" },
 		{ u8"base" },
@@ -52,7 +52,7 @@ namespace gq
 		{ u8"wbr" }
 	};
 
-	const std::unordered_set<boost::string_view, StringRefHash> Serializer::SpecialHandling =
+	const std::unordered_set<std::string_view, StringRefHash> Serializer::SpecialHandling =
 	{
 		{ u8"html" },
 		{ u8"body" }
@@ -113,7 +113,7 @@ namespace gq
 		tagname = GetTagName(node);
 		tagOpeningText.append(u8"<" + tagname);
 
-		boost::string_view tagNameStrRef(tagname);
+		std::string_view tagNameStrRef(tagname);
 
 		bool needSpecialHandling = (SpecialHandling.find(tagNameStrRef) != SpecialHandling.end());
 		bool isEmptyTag = (EmptyTags.find(tagNameStrRef) != EmptyTags.end());
@@ -127,17 +127,17 @@ namespace gq
 			
 			if (foundNodeInUserCollection && mutationCollection->m_onTagAttribute)
 			{
-				boost::string_view attribName;
-				boost::string_view attribValue;
+				std::string_view attribName;
+				std::string_view attribValue;
 
 				if (attribute->original_name.length > 0)
 				{
-					attribName = boost::string_view(attribute->original_name.data, attribute->original_name.length);
+					attribName = std::string_view(attribute->original_name.data, attribute->original_name.length);
 				}
 
 				if (attribute->original_value.length > 0)
 				{
-					attribValue = Util::TrimEnclosingQuotes(boost::string_view(attribute->original_value.data, attribute->original_value.length));
+					attribValue = Util::TrimEnclosingQuotes(std::string_view(attribute->original_value.data, attribute->original_value.length));
 				}				
 
 				if (attribName.size() > 0)
@@ -226,7 +226,7 @@ namespace gq
 	std::string Serializer::SerializeContent(const GumboNode* node, const bool omitText, const NodeMutationCollection* mutationCollection)
 	{
 		std::string tagNameStr = GetTagName(node);
-		boost::string_view tagNameStrRef(tagNameStr);
+		std::string_view tagNameStrRef(tagNameStr);
 		std::string contents;
 
 		// build up result for each child, recursively if need be
@@ -290,7 +290,7 @@ namespace gq
 
 			if (node->v.document.public_identifier != nullptr)
 			{
-				boost::string_view pi(node->v.document.public_identifier);
+				std::string_view pi(node->v.document.public_identifier);
 
 				if (!pi.empty())
 				{
@@ -313,13 +313,13 @@ namespace gq
 		std::string atts(u8" ");
 		atts.append(at->original_name.data, at->original_name.length);
 
-		boost::string_view attValue(at->original_value.data, at->original_value.length);
+		std::string_view attValue(at->original_value.data, at->original_value.length);
 
 		if (!attValue.empty())
 		{
 			atts.append(u8"=");
 
-			atts.append(attValue.to_string());
+			atts.append(attValue);
 		}
 
 		return atts;

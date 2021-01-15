@@ -24,7 +24,7 @@
 
 #include <unordered_set>
 #include <functional>
-#include <boost/utility/string_view.hpp>
+#include <string_view>
 #include <gumbo.h>
 #include <memory>
 #include <string>
@@ -86,7 +86,7 @@ namespace gq
 
 		using OnTagCallback = std::function<bool(const GumboTag tagType)>;
 		using OnTagContentCallback = std::function<bool(const GumboTag tagType, std::string& tagString)>;
-		using OnTagAttributeCallback = std::function<void(const GumboTag tagType, std::string& tagString, boost::string_view attributeName, boost::string_view attributeValue)>;
+		using OnTagAttributeCallback = std::function<void(const GumboTag tagType, std::string& tagString, std::string_view attributeName, std::string_view attributeValue)>;
 
 		/// <summary>
 		/// Adds a node to the collection. Each node added to this collection will have its

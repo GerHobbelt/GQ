@@ -86,7 +86,7 @@ namespace gq
 
 	private:
 		
-		typedef std::multimap<boost::string_view, boost::string_view> AttributeMap;
+		typedef std::multimap<std::string_view, std::string_view> AttributeMap;
 
 		TreeMap();
 
@@ -104,7 +104,7 @@ namespace gq
 		/// this map, but that the key is randomly generated at runtime. To get the key that is used
 		/// for storing normalized tag names, use the static member ::GetTagAttributeKey().
 		/// </param>
-		void AddNodeToMap(boost::string_view scope, const Node* node, const AttributeMap& nodeAttributeMap);
+		void AddNodeToMap(std::string_view scope, const Node* node, const AttributeMap& nodeAttributeMap);
 
 		/// <summary>
 		/// Gets a collection of nodes that have the supplied attribute with the provided scope.
@@ -124,7 +124,7 @@ namespace gq
 		/// A collection of nodes which may contain zero or more elements, depending on how many
 		/// elements matched the supplied parameters within the supplied scope.
 		/// </returns>
-		const std::vector< const Node* >* Get(boost::string_view scope, boost::string_view attribute) const;
+		const std::vector< const Node* >* Get(std::string_view scope, std::string_view attribute) const;
 
 		/// <summary>
 		/// Gets a collection of nodes that have the supplied attribute with the exact value
@@ -147,7 +147,7 @@ namespace gq
 		/// A collection of nodes which may contain zero or more elements, depending on how many
 		/// elements matched the supplied parameters within the supplied scope.
 		/// </returns>
-		const std::vector< const Node* >* Get(boost::string_view scope, boost::string_view attribute, boost::string_view attributeValue) const;
+		const std::vector< const Node* >* Get(std::string_view scope, std::string_view attribute, std::string_view attributeValue) const;
 
 		/// <summary>
 		/// Empties the map.
@@ -164,7 +164,7 @@ namespace gq
 		/// whitespace separated list into multiple individual entries, pushing them to a map like
 		/// this.
 		/// </summary>
-		typedef std::unordered_map<boost::string_view, std::vector< const Node* >, StringRefHash, StringRefEquality> ValueToNodesMap;
+		typedef std::unordered_map<std::string_view, std::vector< const Node* >, StringRefHash, StringRefEquality> ValueToNodesMap;
 
 		/// <summary>
 		/// Attribute maps take an attribute name as a key, and return a map which takes attribute
@@ -174,7 +174,7 @@ namespace gq
 		/// attribute exists, passing "*" as the key to the value map will yield all nodes in which
 		/// the attribute exists.
 		/// </summary>
-		typedef std::unordered_map<boost::string_view, ValueToNodesMap, StringRefHash, StringRefEquality> CollectedAttributesMap;
+		typedef std::unordered_map<std::string_view, ValueToNodesMap, StringRefHash, StringRefEquality> CollectedAttributesMap;
 
 		/// <summary>
 		/// In order to enable quickly searching within a scope, we store shared pointers to built
@@ -194,7 +194,7 @@ namespace gq
 		/// search within a collection, we certainly don't want to bother looking for attributes
 		/// that don't exist within the scope we're searching.
 		/// </summary>
-		typedef std::unordered_map<boost::string_view, CollectedAttributesMap, StringRefHash, StringRefEquality> ScopedAttributeMap;
+		typedef std::unordered_map<std::string_view, CollectedAttributesMap, StringRefHash, StringRefEquality> ScopedAttributeMap;
 
 		/// <summary>
 		/// Scoped attributes which map nodes based on attributes existing and also their values.

@@ -30,7 +30,7 @@
 #pragma once
 
 #include "Selector.hpp"
-#include <boost/utility/string_view.hpp>
+#include <string_view>
 
 namespace gq
 {
@@ -98,7 +98,7 @@ namespace gq
 		/// <param name="key">
 		/// The attribute name to match if it exists. 
 		/// </param>
-		AttributeSelector(boost::string_view key);
+		AttributeSelector(std::string_view key);
 
 		/// <summary>
 		/// Constructs an attribute selector with a supplied attribute name and value to match
@@ -117,7 +117,7 @@ namespace gq
 		/// <param name="value">
 		/// The attribute value to match. 
 		/// </param>
-		AttributeSelector(SelectorOperator op, boost::string_view key, boost::string_view value);
+		AttributeSelector(SelectorOperator op, std::string_view key, std::string_view value);
 
 		/// <summary>
 		/// Default destructor.
@@ -153,7 +153,7 @@ namespace gq
 		/// <summary>
 		/// A string_view wrapper for m_attributeName.
 		/// </summary>
-		boost::string_view m_attributeNameRef;
+		std::string_view m_attributeNameRef;
 
 		/// <summary>
 		/// The attribute value to match.
@@ -163,7 +163,7 @@ namespace gq
 		/// <summary>
 		/// A string_view wrapper for m_attributeValueRef.
 		/// </summary>
-		boost::string_view m_attributeValueRef;
+		std::string_view m_attributeValueRef;
 
 	};
 

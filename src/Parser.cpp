@@ -36,7 +36,7 @@
 namespace gq
 {
 
-	const std::unordered_map<boost::string_view, Parser::PseudoOp, StringRefHash> Parser::PseudoOps =
+	const std::unordered_map<std::string_view, Parser::PseudoOp, StringRefHash> Parser::PseudoOps =
 	{ 
 		{ u8"not", PseudoOp::Not },
 		{ u8"has", PseudoOp::Has },
@@ -74,7 +74,7 @@ namespace gq
 
 	SharedSelector Parser::CreateSelector(std::string selectorString, const bool retainOriginalString) const
 	{
-		boost::string_view input = boost::string_view(selectorString);
+		std::string_view input = std::string_view(selectorString);
 
 		try
 		{
@@ -100,13 +100,13 @@ namespace gq
 		catch (std::runtime_error& e)
 		{
 			std::string errorMessage(e.what());
-			errorMessage.append(std::string(u8" -- [HERE>>>>>") + input.to_string() + std::string(u8"<<<<<]"));
+			errorMessage.append(std::string(u8" -- [HERE>>>>>") + std::string(input) + std::string(u8"<<<<<]"));
 
 			throw std::runtime_error(errorMessage.c_str());
 		}		
 	}
 
-	SharedSelector Parser::ParseSelectorGroup(boost::string_view& selectorStr) const
+	SharedSelector Parser::ParseSelectorGroup(std::string_view& selectorStr) const
 	{
 		// Parse the first selector object from the input supplied. 
 		SharedSelector ret = ParseSelector(selectorStr);
@@ -132,7 +132,7 @@ namespace gq
 		return ret;
 	}
 
-	SharedSelector Parser::ParseSelector(boost::string_view& selectorStr) const
+	SharedSelector Parser::ParseSelector(std::string_view& selectorStr) const
 	{
 		TrimLeadingWhitespace(selectorStr);
 
@@ -155,13 +155,13 @@ namespace gq
 					
 					if (!IsCombinator(combinator))
 					{
-						throw std::runtime_error(u8"In Parser::ParseSelector(boost::string_view&) - Invalid combinator supplied.");
+						throw std::runtime_error(u8"In Parser::ParseSelector(std::string_view&) - Invalid combinator supplied.");
 					}
 
 					selectorStr = selectorStr.substr(1);
 					if (!TrimLeadingWhitespace(selectorStr))
 					{
-						throw std::runtime_error(u8"In Parser::ParseSelector(boost::string_view&) - Invalid combinator supplied. Combinator had leading whitespace without trailing whitespace.");
+						throw std::runtime_error(u8"In Parser::ParseSelector(std::string_view&) - Invalid combinator supplied. Combinator had leading whitespace without trailing whitespace.");
 					}
 				}
 			}
@@ -223,7 +223,7 @@ namespace gq
 					// This should never happen, since we've correctly only accepted valid
 					// combinators. However, if somehow this happens, we should explode the
 					// universe.
-					throw std::runtime_error(u8"In Parser::ParseSelector(boost::string_view&) - Invalid combinator supplied.");
+					throw std::runtime_error(u8"In Parser::ParseSelector(std::string_view&) - Invalid combinator supplied.");
 			}
 
 			combinator = 0;
@@ -232,11 +232,11 @@ namespace gq
 		return ret;
 	}
 
-	SharedSelector Parser::ParseSimpleSelectorSequence(boost::string_view& selectorStr) const
+	SharedSelector Parser::ParseSimpleSelectorSequence(std::string_view& selectorStr) const
 	{
 		if (selectorStr.size() == 0)
 		{
-			throw std::runtime_error(u8"In Parser::ParseSimpleSelectorSequence(boost::string_view&) - Expected selector string, received empty string.");
+			throw std::runtime_error(u8"In Parser::ParseSimpleSelectorSequence(std::string_view&) - Expected selector string, received empty string.");
 		}
 
 		SharedSelector ret = nullptr;
@@ -352,33 +352,33 @@ namespace gq
 
 		if (ret == nullptr)
 		{
-			throw std::runtime_error(u8"In Parser::ParseSimpleSelectorSequence(boost::string_view&) - Failed to generate a single selector. The supplied selector string must have been invalid.");
+			throw std::runtime_error(u8"In Parser::ParseSimpleSelectorSequence(std::string_view&) - Failed to generate a single selector. The supplied selector string must have been invalid.");
 		}
 
 		return ret;
 	}
 
-	SharedSelector Parser::ParsePseudoclassSelector(boost::string_view& selectorStr) const
+	SharedSelector Parser::ParsePseudoclassSelector(std::string_view& selectorStr) const
 	{
 		if (selectorStr.size() == 0 || selectorStr[0] != ':')
 		{
-			throw std::runtime_error(u8"In Parser::ParsePseudoclassSelector(boost::string_view&) - Expected pseudo class selector string.");
+			throw std::runtime_error(u8"In Parser::ParsePseudoclassSelector(std::string_view&) - Expected pseudo class selector string.");
 		}
 
 		selectorStr = selectorStr.substr(1);
 
-		boost::string_view name = ParseIdentifier(selectorStr);
+		std::string_view name = ParseIdentifier(selectorStr);
 
 		// Unfortunately, we need to copy out to a new string so we can force it to lower case 
-		std::string nameAsString = name.to_string();
+		std::string nameAsString = std::string(name);
 		boost::to_lower(nameAsString);
-		name = boost::string_view(nameAsString);
+		name = std::string_view(nameAsString);
 
 		const auto pseudoOperatorResult = PseudoOps.find(name);
 
 		if (pseudoOperatorResult == PseudoOps.end())
 		{
-			std::string errString = u8"In Parser::ParsePseudoclassSelector(boost::string_view&) - Unsupported Pseudo selector type: " + nameAsString;
+			std::string errString = u8"In Parser::ParsePseudoclassSelector(std::string_view&) - Unsupported Pseudo selector type: " + nameAsString;
 			throw std::runtime_error(errString.c_str());
 		}
 
@@ -420,7 +420,7 @@ namespace gq
 			{
 				ConsumeOpeningParenthesis(selectorStr);
 
-				boost::string_view value;
+				std::string_view value;
 
 				const char& c = selectorStr[0];
 				if (c == '\'' || c == '"')
@@ -524,11 +524,11 @@ namespace gq
 		return nullptr;
 	}
 
-	SharedSelector Parser::ParseAttributeSelector(boost::string_view& selectorStr) const
+	SharedSelector Parser::ParseAttributeSelector(std::string_view& selectorStr) const
 	{
 		if (selectorStr.size() == 0 || selectorStr[0] != '[')
 		{
-			throw std::runtime_error(u8"In Parser::ParseAttributeSelector(boost::string_view&) - Expected atrribute selector string.");
+			throw std::runtime_error(u8"In Parser::ParseAttributeSelector(std::string_view&) - Expected atrribute selector string.");
 		}
 
 		selectorStr = selectorStr.substr(1);
@@ -536,7 +536,7 @@ namespace gq
 
 		if (selectorStr.length() == 0)
 		{
-			throw std::runtime_error(u8"In Parser::ParseAttributeSelector(boost::string_view&) - Expected identifier, reached EOF instead.");
+			throw std::runtime_error(u8"In Parser::ParseAttributeSelector(std::string_view&) - Expected identifier, reached EOF instead.");
 		}
 
 		// This is used for matching attributes not exactly, but by a specific prefix. If this is
@@ -551,16 +551,16 @@ namespace gq
 		bool doesAttributeHasPrefix = false;
 		if (selectorStr[0] == '^')
 		{
-			throw std::runtime_error(u8"In Parser::ParseAttributeSelector(boost::string_view&) - Attribute name as prefix selector is unsupported.");
+			throw std::runtime_error(u8"In Parser::ParseAttributeSelector(std::string_view&) - Attribute name as prefix selector is unsupported.");
 			doesAttributeHasPrefix = true;
 			selectorStr = selectorStr.substr(1);
 		}
 
-		boost::string_view key = ParseIdentifier(selectorStr);
+		std::string_view key = ParseIdentifier(selectorStr);
 
 		if (selectorStr.length() == 0)
 		{
-			throw std::runtime_error(u8"In Parser::ParseAttributeSelector(boost::string_view&) - No value for identifier specified and no closing brace found.");
+			throw std::runtime_error(u8"In Parser::ParseAttributeSelector(std::string_view&) - No value for identifier specified and no closing brace found.");
 		}
 
 		const char& valueMatchFirstChar = selectorStr[0];
@@ -593,7 +593,7 @@ namespace gq
 			}
 			else
 			{
-				throw std::runtime_error(u8"In Parser::ParseAttributeSelector(boost::string_view&) - Broken hypen attribute value match supplied.");
+				throw std::runtime_error(u8"In Parser::ParseAttributeSelector(std::string_view&) - Broken hypen attribute value match supplied.");
 			}
 		}
 		break;
@@ -608,7 +608,7 @@ namespace gq
 			}
 			else
 			{
-				throw std::runtime_error(u8"In Parser::ParseAttributeSelector(boost::string_view&) - Broken whitespace attribute value match supplied.");
+				throw std::runtime_error(u8"In Parser::ParseAttributeSelector(std::string_view&) - Broken whitespace attribute value match supplied.");
 			}
 		}
 		break;
@@ -623,7 +623,7 @@ namespace gq
 			}
 			else
 			{
-				throw std::runtime_error(u8"In Parser::ParseAttributeSelector(boost::string_view&) - Broken prefix attribute value match supplied.");
+				throw std::runtime_error(u8"In Parser::ParseAttributeSelector(std::string_view&) - Broken prefix attribute value match supplied.");
 			}
 		}
 		break;
@@ -638,7 +638,7 @@ namespace gq
 			}
 			else
 			{
-				throw std::runtime_error(u8"In Parser::ParseAttributeSelector(boost::string_view&) - Broken suffix attribute value match supplied.");
+				throw std::runtime_error(u8"In Parser::ParseAttributeSelector(std::string_view&) - Broken suffix attribute value match supplied.");
 			}
 		}
 		break;
@@ -653,7 +653,7 @@ namespace gq
 			}
 			else
 			{
-				throw std::runtime_error(u8"In Parser::ParseAttributeSelector(boost::string_view&) - Broken substring attribute value match supplied.");
+				throw std::runtime_error(u8"In Parser::ParseAttributeSelector(std::string_view&) - Broken substring attribute value match supplied.");
 			}
 		}
 		break;
@@ -669,19 +669,19 @@ namespace gq
 			}
 			else
 			{
-				throw std::runtime_error(u8"In Parser::ParseAttributeSelector(boost::string_view&) - Broken substring attribute value match supplied. Expected value, got EOF.");
+				throw std::runtime_error(u8"In Parser::ParseAttributeSelector(std::string_view&) - Broken substring attribute value match supplied. Expected value, got EOF.");
 			}
 		}
 		break;
 
 		default:
-			throw std::runtime_error(u8"In Parser::ParseAttributeSelector(boost::string_view&) - Invalid attribute value specifier.");
+			throw std::runtime_error(u8"In Parser::ParseAttributeSelector(std::string_view&) - Invalid attribute value specifier.");
 		} /* switch (valueMatchFirstChar) */
 
 		// Trim off the match specifier
 		selectorStr = selectorStr.substr(trimLength);
 
-		boost::string_view value;
+		std::string_view value;
 
 		const char& firstValueChar = selectorStr[0];
 
@@ -698,7 +698,7 @@ namespace gq
 
 		if (selectorStr.length() == 0 || selectorStr[0] != ']')
 		{
-			throw std::runtime_error(u8"In Parser::ParseAttributeSelector(boost::string_view&) - Expected attribute closing tag aka ']', found invalid character or EOF instead.");
+			throw std::runtime_error(u8"In Parser::ParseAttributeSelector(std::string_view&) - Expected attribute closing tag aka ']', found invalid character or EOF instead.");
 		}
 
 		// Consume the closing bracket
@@ -707,16 +707,16 @@ namespace gq
 		return std::make_shared<AttributeSelector>(op, key, value);
 	}
 
-	SharedSelector Parser::ParseClassSelector(boost::string_view& selectorStr) const
+	SharedSelector Parser::ParseClassSelector(std::string_view& selectorStr) const
 	{
 		if (selectorStr.size() < 2 || selectorStr[0] != '.')
 		{
-			throw std::runtime_error(u8"In Parser::ParseClassSelector(boost::string_view&) - Expected class specifier, got insufficient string or non-class definition.");
+			throw std::runtime_error(u8"In Parser::ParseClassSelector(std::string_view&) - Expected class specifier, got insufficient string or non-class definition.");
 		}
 
 		selectorStr = selectorStr.substr(1);
 
-		boost::string_view className;
+		std::string_view className;
 
 		if (selectorStr[0] == '"' || selectorStr[0] == '\'')
 		{
@@ -727,21 +727,21 @@ namespace gq
 			className = ParseIdentifier(selectorStr);
 		}
 
-		boost::string_view clazz = u8"class";
+		std::string_view clazz = u8"class";
 
 		return std::make_shared<AttributeSelector>(AttributeSelector::SelectorOperator::ValueContainsElementInWhitespaceSeparatedList, clazz, className);
 	}
 
-	SharedSelector Parser::ParseIDSelector(boost::string_view& selectorStr) const
+	SharedSelector Parser::ParseIDSelector(std::string_view& selectorStr) const
 	{
 		if (selectorStr.size() < 2 || selectorStr[0] != '#')
 		{
-			throw std::runtime_error(u8"In Parser::ParseIDSelector(boost::string_view&) - Expected ID specifier, got insufficient string or non-ID definition.");
+			throw std::runtime_error(u8"In Parser::ParseIDSelector(std::string_view&) - Expected ID specifier, got insufficient string or non-ID definition.");
 		}
 
 		selectorStr = selectorStr.substr(1);
 
-		boost::string_view elementId;
+		std::string_view elementId;
 
 		if (selectorStr[0] == '"' || selectorStr[0] == '\'')
 		{
@@ -752,41 +752,41 @@ namespace gq
 			elementId = ParseName(selectorStr);
 		}
 
-		boost::string_view id = u8"id";
+		std::string_view id = u8"id";
 		
 		return std::make_shared<AttributeSelector>(AttributeSelector::SelectorOperator::ValueEquals, id, elementId);
 	}
 
-	SharedSelector Parser::ParseTypeSelector(boost::string_view& selectorStr) const
+	SharedSelector Parser::ParseTypeSelector(std::string_view& selectorStr) const
 	{
 		if (selectorStr.size() == 0)
 		{
-			throw std::runtime_error(u8"In Parser::ParseTypeSelector(boost::string_view&) - Expected Tag specifier, got empty string.");
+			throw std::runtime_error(u8"In Parser::ParseTypeSelector(std::string_view&) - Expected Tag specifier, got empty string.");
 		}
 
-		boost::string_view tag = ParseIdentifier(selectorStr);
+		std::string_view tag = ParseIdentifier(selectorStr);
 			 
-		return std::make_shared<Selector>(gumbo_tag_enum(tag.to_string().c_str()));
+		return std::make_shared<Selector>(gumbo_tag_enum(std::string(tag).c_str()));
 	}
 
-	void Parser::ParseNth(boost::string_view& selectorStr, int& lhs, int& rhs) const
+	void Parser::ParseNth(std::string_view& selectorStr, int& lhs, int& rhs) const
 	{
 		TrimLeadingWhitespace(selectorStr);
 
 		if (selectorStr.length() == 0)
 		{
-			throw std::runtime_error(u8"In Parser::ParseNth(boost::string_view&, const int& ,const int&) - Expected Nth(...) definintion, got empty string.");
+			throw std::runtime_error(u8"In Parser::ParseNth(std::string_view&, const int& ,const int&) - Expected Nth(...) definintion, got empty string.");
 		}
 
 		const size_t nPosition = selectorStr.find_first_of(u8"nNdD");
 		const size_t closingParenPosition = selectorStr.find(')');
 
-		if (closingParenPosition == boost::string_view::npos)
+		if (closingParenPosition == std::string_view::npos)
 		{
-			throw std::runtime_error(u8"In Parser::ParseNth(boost::string_view&, const int& ,const int&) - No closing parenthesis was found for nth parameter.");
+			throw std::runtime_error(u8"In Parser::ParseNth(std::string_view&, const int& ,const int&) - No closing parenthesis was found for nth parameter.");
 		}
 
-		if (nPosition != boost::string_view::npos && nPosition < closingParenPosition)
+		if (nPosition != std::string_view::npos && nPosition < closingParenPosition)
 		{
 			if (nPosition > 0)
 			{
@@ -794,8 +794,8 @@ namespace gq
 				{
 					// This is either odd, even or an invalid string
 
-					boost::string_view name = ParseName(selectorStr);
-					std::string nameString = name.to_string();
+					std::string_view name = ParseName(selectorStr);
+					std::string nameString = std::string(name);
 					boost::to_lower(nameString);
 
 					if (nameString.compare(u8"odd") == 0)
@@ -810,7 +810,7 @@ namespace gq
 					}
 					else
 					{
-						throw std::runtime_error(u8"In Parser::ParseNth(boost::string_view&, const int& ,const int&) - Expected 'odd' or 'even', invalid nth value found.");
+						throw std::runtime_error(u8"In Parser::ParseNth(std::string_view&, const int& ,const int&) - Expected 'odd' or 'even', invalid nth value found.");
 					}
 
 					return;
@@ -818,14 +818,14 @@ namespace gq
 				else
 				{
 					// This is almost certainly an expression using N, such as -n+ 6
-					boost::string_view wholeParam = selectorStr.substr(0, closingParenPosition);
-					boost::string_view leftHandSide = wholeParam.substr(0, nPosition);
-					boost::string_view rightHandSide = wholeParam.substr(nPosition + 1);
+					std::string_view wholeParam = selectorStr.substr(0, closingParenPosition);
+					std::string_view leftHandSide = wholeParam.substr(0, nPosition);
+					std::string_view rightHandSide = wholeParam.substr(nPosition + 1);
 
 					selectorStr = selectorStr.substr(closingParenPosition);
 
-					std::string lhss = leftHandSide.to_string();
-					std::string rhss = rightHandSide.to_string();
+					std::string lhss = std::string(leftHandSide);
+					std::string rhss = std::string(rightHandSide);
 
 					boost::replace_all(lhss, u8"\t\f\r\n ", u8"");
 					boost::replace_all(rhss, u8"\t\f\r\n ", u8"");
@@ -847,7 +847,7 @@ namespace gq
 						}
 						else
 						{
-							throw std::runtime_error(u8"In Parser::ParseNth(boost::string_view&, const int& ,const int&) - Single character left hand side of nth is neither '+', '-' or a digit.");
+							throw std::runtime_error(u8"In Parser::ParseNth(std::string_view&, const int& ,const int&) - Single character left hand side of nth is neither '+', '-' or a digit.");
 						}
 					}
 					else
@@ -865,7 +865,7 @@ namespace gq
 							{
 								if (!std::isdigit(lhss[i], m_localeEnUS))
 								{
-									throw std::runtime_error(u8"In Parser::ParseNth(boost::string_view&, const int& ,const int&) - Nth parameter left hand side contained non-digit input.");
+									throw std::runtime_error(u8"In Parser::ParseNth(std::string_view&, const int& ,const int&) - Nth parameter left hand side contained non-digit input.");
 								}
 							}
 
@@ -888,7 +888,7 @@ namespace gq
 					{
 						if (!std::isdigit(rhss[i], m_localeEnUS))
 						{							
-							std::string errMessage(u8"In Parser::ParseNth(boost::string_view&, const int& ,const int&) - Nth parameter right hand side \"");
+							std::string errMessage(u8"In Parser::ParseNth(std::string_view&, const int& ,const int&) - Nth parameter right hand side \"");
 							errMessage.append(rhss).append(u8"\" contained non-digit input.");
 							throw std::runtime_error(errMessage.c_str());
 						}
@@ -906,12 +906,12 @@ namespace gq
 				{
 					lhs = 0;
 
-					boost::string_view wholeParam = selectorStr.substr(0, closingParenPosition);
-					boost::string_view rightHandSide = wholeParam.substr(1);
+					std::string_view wholeParam = selectorStr.substr(0, closingParenPosition);
+					std::string_view rightHandSide = wholeParam.substr(1);
 
 					selectorStr = selectorStr.substr(closingParenPosition);
 
-					std::string rhss = rightHandSide.to_string();
+					std::string rhss = std::string(rightHandSide);
 
 					boost::replace_all(rhss, u8"\t\f\r\n ", u8"");
 
@@ -926,7 +926,7 @@ namespace gq
 					{
 						if (!std::isdigit(rhss[i], m_localeEnUS))
 						{
-							std::string errMessage(u8"In Parser::ParseNth(boost::string_view&, const int& ,const int&) - Nth parameter right hand side \"");
+							std::string errMessage(u8"In Parser::ParseNth(std::string_view&, const int& ,const int&) - Nth parameter right hand side \"");
 							errMessage.append(rhss).append(u8"\" contained non-digit input.");
 							throw std::runtime_error(errMessage.c_str());
 						}
@@ -936,7 +936,7 @@ namespace gq
 				}
 				else
 				{
-					throw std::runtime_error(u8"In Parser::ParseNth(boost::string_view&, const int& ,const int&) - Nth parameter starts with alphabetical character other than N.");
+					throw std::runtime_error(u8"In Parser::ParseNth(std::string_view&, const int& ,const int&) - Nth parameter starts with alphabetical character other than N.");
 				}
 			}
 		}
@@ -944,11 +944,11 @@ namespace gq
 		{
 			// No 'N' is part of the nth parameter, so it must be a single integer value
 
-			boost::string_view wholeParam = selectorStr.substr(0, closingParenPosition);
+			std::string_view wholeParam = selectorStr.substr(0, closingParenPosition);
 
 			selectorStr = selectorStr.substr(closingParenPosition);
 
-			std::string paramStr = wholeParam.to_string();
+			std::string paramStr = std::string(wholeParam);
 
 			boost::replace_all(paramStr, u8"\t\f\r\n ", u8"");
 
@@ -963,7 +963,7 @@ namespace gq
 			{
 				if (!std::isdigit(paramStr[i], m_localeEnUS))
 				{
-					std::string errorMessage(u8"In Parser::ParseNth(boost::string_view&, const int& ,const int&) - Single integer Nth parameter contained non-digit input. String is: ");
+					std::string errorMessage(u8"In Parser::ParseNth(std::string_view&, const int& ,const int&) - Single integer Nth parameter contained non-digit input. String is: ");
 					errorMessage.append(paramStr);
 					throw std::runtime_error(errorMessage.c_str());
 				}
@@ -977,11 +977,11 @@ namespace gq
 		}
 	}
 
-	const int Parser::ParseInteger(boost::string_view& selectorStr) const
+	const int Parser::ParseInteger(std::string_view& selectorStr) const
 	{
 		if (selectorStr.length() == 0)
 		{
-			throw std::runtime_error(u8"In Parser::ParseInteger(boost::string_view&) - Expected number in string representation, got empty string.");
+			throw std::runtime_error(u8"In Parser::ParseInteger(std::string_view&) - Expected number in string representation, got empty string.");
 		}
 
 		TrimLeadingWhitespace(selectorStr);
@@ -995,14 +995,14 @@ namespace gq
 
 		if (!std::isdigit(selectorStr[endPos], m_localeEnUS))
 		{
-			throw std::runtime_error(u8"In Parser::ParseInteger(boost::string_view&) - Expected number in string representation, got non-digit characters.");
+			throw std::runtime_error(u8"In Parser::ParseInteger(std::string_view&) - Expected number in string representation, got non-digit characters.");
 		}
 
 		++endPos;
 
 		if (endPos >= selectorStr.size())
 		{
-			throw std::runtime_error(u8"In Parser::ParseInteger(boost::string_view&) - Expected number in string representation, got EOF instead.");
+			throw std::runtime_error(u8"In Parser::ParseInteger(std::string_view&) - Expected number in string representation, got EOF instead.");
 		}
 
 		while (endPos < selectorStr.size())
@@ -1015,32 +1015,32 @@ namespace gq
 			endPos++;
 		}
 
-		boost::string_view numStr = selectorStr.substr(endPos);
+		std::string_view numStr = selectorStr.substr(endPos);
 		selectorStr = selectorStr.substr(endPos);
 
-		return stoi(numStr.to_string());
+		return stoi(std::string(numStr));
 	}
 
-	void Parser::ConsumeClosingParenthesis(boost::string_view& selectorStr) const
+	void Parser::ConsumeClosingParenthesis(std::string_view& selectorStr) const
 	{
 		TrimLeadingWhitespace(selectorStr);
 
 		if (selectorStr.size() == 0 || selectorStr[0] != ')')
 		{
-			std::string errorMessage(u8"In Parser::ConsumeClosingParenthesis(boost::string_view&) - Expected string with closing parenthesis, got empty string or string not preceeded by opening parenthesis. String Is: ");
-			errorMessage.append(selectorStr.to_string());
+			std::string errorMessage(u8"In Parser::ConsumeClosingParenthesis(std::string_view&) - Expected string with closing parenthesis, got empty string or string not preceeded by opening parenthesis. String Is: ");
+			errorMessage.append(selectorStr);
 			throw std::runtime_error(errorMessage.c_str());
 		}
 
 		selectorStr = selectorStr.substr(1);
 	}
 
-	void Parser::ConsumeOpeningParenthesis(boost::string_view& selectorStr) const
+	void Parser::ConsumeOpeningParenthesis(std::string_view& selectorStr) const
 	{
 		if (selectorStr.size() == 0 || selectorStr[0] != '(')
 		{
-			std::string errorMessage(u8"In Parser::ConsumeOpeningParenthesis(boost::string_view&) - Expected string with opening parenthesis, got empty string or string not preceeded by opening parenthesis. String Is: ");
-			errorMessage.append(selectorStr.to_string());
+			std::string errorMessage(u8"In Parser::ConsumeOpeningParenthesis(std::string_view&) - Expected string with opening parenthesis, got empty string or string not preceeded by opening parenthesis. String Is: ");
+			errorMessage.append(selectorStr);
 			throw std::runtime_error(errorMessage.c_str());
 		}
 
@@ -1049,7 +1049,7 @@ namespace gq
 		TrimLeadingWhitespace(selectorStr);
 	}
 
-	const bool Parser::TrimLeadingWhitespace(boost::string_view& str) const
+	const bool Parser::TrimLeadingWhitespace(std::string_view& str) const
 	{
 		// The original SkipWhitespace method in the gumbo-query CParser class not only skipped over
 		// whitespace, but also skipped over comments like /*....*/. I can't see a reason to
@@ -1078,7 +1078,7 @@ namespace gq
 		return trimmed;
 	}
 
-	boost::string_view Parser::ParseString(boost::string_view& selectorStr) const
+	std::string_view Parser::ParseString(std::string_view& selectorStr) const
 	{
 		// This method assumes it has been called when the first character in the supplied
 		// string_view is either a ' or " quote. This function is a complete rewrite over the
@@ -1089,14 +1089,14 @@ namespace gq
 
 		if (selectorStr.size() == 0)
 		{
-			throw std::runtime_error(u8"In Parser::ParseString(boost::string_view&) - Expected quoted string, got empty string.");
+			throw std::runtime_error(u8"In Parser::ParseString(std::string_view&) - Expected quoted string, got empty string.");
 		}
 
 		const char& quoteChar = selectorStr[0];
 
 		if (quoteChar != '\'' && quoteChar != '"')
 		{
-			throw std::runtime_error(u8"In Parser::ParseString(boost::string_view&) - Expected quoted string, string does not begin with valid quote characters.");
+			throw std::runtime_error(u8"In Parser::ParseString(std::string_view&) - Expected quoted string, string does not begin with valid quote characters.");
 		}
 
 		// Remove the opening quote
@@ -1106,11 +1106,11 @@ namespace gq
 
 		if (pos == std::string::npos)
 		{
-			throw std::runtime_error(u8"In Parser::ParseString(boost::string_view&) - No closing quote found in supplied quoted string.");
+			throw std::runtime_error(u8"In Parser::ParseString(std::string_view&) - No closing quote found in supplied quoted string.");
 		}
 		else if (pos == 0)
 		{
-			throw std::runtime_error(u8"In Parser::ParseString(boost::string_view&) - String begins with unescaped quote character.");
+			throw std::runtime_error(u8"In Parser::ParseString(std::string_view&) - String begins with unescaped quote character.");
 		}
 
 		size_t endOffset = 0;
@@ -1133,28 +1133,28 @@ namespace gq
 			}
 		}
 
-		if (endOffset == boost::string_view::npos || endOffset > selectorStr.size())
+		if (endOffset == std::string_view::npos || endOffset > selectorStr.size())
 		{
-			throw std::runtime_error(u8"In Parser::ParseString(boost::string_view&) - No unescaped closing quote found in supplied quoted string.");
+			throw std::runtime_error(u8"In Parser::ParseString(std::string_view&) - No unescaped closing quote found in supplied quoted string.");
 		}
 
-		boost::string_view value = selectorStr.substr(0, endOffset);
+		std::string_view value = selectorStr.substr(0, endOffset);
 
 		selectorStr = selectorStr.substr(endOffset + 1);
 
 		return value;
 	}
 
-	boost::string_view Parser::ParseName(boost::string_view& selectorStr) const
+	std::string_view Parser::ParseName(std::string_view& selectorStr) const
 	{
 		return ParseIdentifier(selectorStr);
 	}
 
-	boost::string_view Parser::ParseIdentifier(boost::string_view& selectorStr) const
+	std::string_view Parser::ParseIdentifier(std::string_view& selectorStr) const
 	{
 		if (selectorStr.size() == 0)
 		{
-			throw std::runtime_error(u8"In Parser::ParseIdentifier(boost::string_view&) - Expected selector containing identifier, got empty string.");
+			throw std::runtime_error(u8"In Parser::ParseIdentifier(std::string_view&) - Expected selector containing identifier, got empty string.");
 		}
 
 		bool notDone = true;
@@ -1165,12 +1165,12 @@ namespace gq
 		{
 			if (selectorStr[ind] == '&')
 			{
-				boost::string_view sub = selectorStr.substr(ind);
+				std::string_view sub = selectorStr.substr(ind);
 				auto endPos = sub.find(';');
 
-				if (endPos == boost::string_view::npos)
+				if (endPos == std::string_view::npos)
 				{
-					throw std::runtime_error(u8"In Parser::ParseIdentifier(boost::string_view&) - Encountered improperly formatted named or numbered character reference.");
+					throw std::runtime_error(u8"In Parser::ParseIdentifier(std::string_view&) - Encountered improperly formatted named or numbered character reference.");
 				}
 
 				ind += static_cast<int>(endPos+1);
@@ -1209,7 +1209,7 @@ namespace gq
 
 				if (!foundEscapeSequenceEnd)
 				{
-					throw std::runtime_error(u8"In Parser::ParseIdentifier(boost::string_view&) - Encountered improperly formatted character escape sequence. Escaped character sequences must be followed by a space.");
+					throw std::runtime_error(u8"In Parser::ParseIdentifier(std::string_view&) - Encountered improperly formatted character escape sequence. Escaped character sequences must be followed by a space.");
 				}
 			}
 			else if (!IsNameChar(selectorStr[ind]))
@@ -1223,7 +1223,7 @@ namespace gq
 
 		if (ind <= 0)
 		{
-			throw std::runtime_error(u8"In Parser::ParseIdentifier(boost::string_view&) - Expected selector containing identifier, yet no valid identifier was found.");
+			throw std::runtime_error(u8"In Parser::ParseIdentifier(std::string_view&) - Expected selector containing identifier, yet no valid identifier was found.");
 		}		
 
 		if (ind > static_cast<int>(selectorStr.size()))
@@ -1231,7 +1231,7 @@ namespace gq
 			ind = static_cast<int>(selectorStr.size());
 		}
 
-		boost::string_view value = selectorStr.substr(0, ind);
+		std::string_view value = selectorStr.substr(0, ind);
 		selectorStr = selectorStr.substr(ind);		
 		
 		return value;

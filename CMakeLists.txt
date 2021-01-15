@@ -8,8 +8,7 @@ set(PROJECT_VERSION 0.0.1-dev)
 if(UNIX)
 
   # C++14
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -Wall -Wl,--no-undefined -Wl,--no-allow-shlib-undefined")
-  
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -Wall")
 
   configure_file(
     "${CMAKE_CURRENT_SOURCE_DIR}/pkg-config/GQ.pc.in"

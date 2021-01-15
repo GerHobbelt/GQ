@@ -9,6 +9,7 @@ if(UNIX)
   
 endif(UNIX)
 
+find_package(Boost 1.69.0 REQUIRED)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(GUMBO REQUIRED gumbo)
 

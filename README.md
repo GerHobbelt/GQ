@@ -131,3 +131,6 @@ There is a minimal amount of setup required for building under Windows with VS, 
  - Expose compiled selectors to the public so that they can be retained and recycled against existing and new documents.
  - "Comments. Lots of comments."
  - "Speed. Lots of Speed."
+
+# License
+See [LICENSE](./LICENSE).

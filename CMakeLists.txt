@@ -7,6 +7,17 @@ if(UNIX)
   # C++14
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -Wall -Wl,--no-undefined -Wl,--no-allow-shlib-undefined")
   
+
+  configure_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/pkg-config/GQ.pc.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/pkg-config/GQ.pc" @ONLY
+  )
+
+  install(
+    FILES "${CMAKE_CURRENT_BINARY_DIR}/pkg-config/GQ.pc"
+    DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig"
+  )
+
 endif(UNIX)
 
 find_package(Boost 1.69.0 REQUIRED)
@@ -23,5 +34,10 @@ add_library(GQ SHARED "${HEADERS}" "${SOURCES}")
 
 target_link_libraries(GQ ${GUMBO_LIBRARIES})
 
+set_target_properties(GQ PROPERTIES PUBLIC_HEADER "${HEADERS}")
 
-  
+install(
+  TARGETS GQ
+  LIBRARY DESTINATION lib
+  PUBLIC_HEADER DESTINATION include/GQ
+)
